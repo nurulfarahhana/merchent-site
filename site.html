@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+        
+    <title>Laghobuying | Modern Heritage</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --brand-dark: #1a1a1a;
+            --brand-accent: #c5a059;
+            --brand-light: #f8f9fa;
+            --skeleton: #eeeeee;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: var(--brand-dark);
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, .navbar-brand {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #eee;
+            z-index: 1000;
+        }
+
+        /* Language Switcher */
+        .lang-btn {
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+        .lang-btn.active {
+            background: var(--brand-dark);
+            color: white;
+        }
+
+        /* Skeleton Loading Effect */
+        .skeleton-card {
+            background: var(--skeleton);
+            border-radius: 12px;
+            aspect-ratio: 3/4;
+            position: relative;
+            overflow: hidden;
+        }
+        .skeleton-card::after {
+            content: "";
+            position: absolute;
+            top: 0; right: 0; bottom: 0; left: 0;
+            background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
+            animation: shimmer 1.5s infinite;
+        }
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Reveal Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Category Filter */
+        .filter-btn {
+            border: none;
+            background: none;
+            padding: 8px 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #888;
+            transition: all 0.3s;
+            border-radius: 30px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .filter-btn.active {
+            background: var(--brand-dark);
+            color: white;
+        }
+
+        /* Product Cards */
+        .product-card {
+            border: none;
+            transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            margin-bottom: 30px;
+            cursor: default; /* No longer a pointer for the whole card since modal is gone */
+        }
+        .product-card:hover { transform: translateY(-5px); }
+
+        .product-img-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+            aspect-ratio: 3/4;
+            background: #f7f7f7;
+        }
+        .product-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .btn-add-cart {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            border: none;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            z-index: 2;
+            cursor: pointer;
+        }
+        .product-card:hover .btn-add-cart { 
+            opacity: 1; 
+            transform: translateY(0);
+        }
+
+        /* Recently Viewed Sticky Bar */
+        #recentlyViewed {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            padding: 10px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: none;
+            z-index: 900;
+            max-width: 300px;
+            border: 1px solid #eee;
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            z-index: 3000;
+        }
+        .custom-toast {
+            background: #222;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            animation: slideInRight 0.4s ease-out;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Side Panels */
+        .side-panel {
+            position: fixed;
+            top: 0;
+            right: -450px;
+            width: 450px;
+            max-width: 100%;
+            height: 100%;
+            background: white;
+            z-index: 2000;
+            transition: right 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.05);
+        }
+        .side-panel.active { right: 0; }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(4px);
+            z-index: 1999;
+            display: none;
+        }
+
+        .extra-small { font-size: 0.7rem; }
+    </style>
+</head>
+<body>
+
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg sticky-top py-3">
+        <div class="container">
+            <a class="navbar-brand fw-bold fs-3" href="#">LAGHOBUYING</a>
+            <div class="d-flex align-items-center ms-auto">
+                <!-- Language Switcher -->
+                <div class="me-3 d-flex align-items-center gap-1 border-end pe-3">
+                    <span class="lang-btn" id="lang-en" onclick="setLanguage('en')">EN</span>
+                    <span class="text-muted small">|</span>
+                    <span class="lang-btn" id="lang-my" onclick="setLanguage('my')">MY</span>
+                </div>
+                
+                <input type="text" id="searchInput" class="form-control form-control-sm me-3 rounded-pill d-none d-md-block" style="width: 150px;" data-t="search_placeholder" onkeyup="filterSearch()">
+                
+                <button class="btn position-relative p-0" onclick="togglePanel('cartSidebar')">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                    <span id="cartCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark" style="font-size: 0.6rem;">0</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <header class="py-5 bg-light text-center">
+        <div class="container py-5 reveal">
+            <h1 class="display-3 fw-bold mb-3" data-t="hero_title">Modern Heritage.</h1>
+            <p class="text-muted mb-4 fs-5 mx-auto" style="max-width: 600px;" data-t="hero_desc">Curated collection celebrating the fusion of traditional art and contemporary design.</p>
+            <a href="#shop" class="btn btn-dark px-5 py-3 rounded-pill fw-bold tracking-widest" data-t="hero_cta">EXPLORE COLLECTION</a>
+        </div>
+    </header>
+
+    <!-- Shop Section -->
+    <section id="shop" class="container py-5">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end mb-5">
+            <div>
+                <h2 class="fw-bold mb-1" data-t="catalog_title">Catalog</h2>
+                <p class="text-muted small mb-0"><span data-t="browsing_label">Browsing</span> <span id="categoryLabel">All Items</span></p>
+            </div>
+            <div class="mt-4 mt-md-0 d-flex gap-1 overflow-auto pb-2">
+                <button class="filter-btn active" onclick="filterCategory('All', this)" data-t="cat_all">All</button>
+                <button class="filter-btn" onclick="filterCategory('Accessories', this)" data-t="cat_acc">Accessories</button>
+                <button class="filter-btn" onclick="filterCategory('Home', this)" data-t="cat_home">Home</button>
+                <button class="filter-btn" onclick="filterCategory('Apparel', this)" data-t="cat_apparel">Apparel</button>
+            </div>
+        </div>
+        
+        <div class="row" id="productGrid">
+            <!-- Skeletons -->
+        </div>
+    </section>
+
+    <!-- Recently Viewed -->
+    <div id="recentlyViewed">
+        <div class="d-flex align-items-center justify-content-between mb-2">
+            <span class="extra-small fw-bold text-muted tracking-widest text-uppercase" data-t="recent_label">RECENTLY VIEWED</span>
+            <button class="btn btn-sm p-0" onclick="closeRecentlyViewed()">&times;</button>
+        </div>
+        <div id="historyItems" class="d-flex gap-2"></div>
+    </div>
+
+    <div class="overlay" id="globalOverlay" onclick="closePanels()"></div>
+
+    <!-- Cart Sidebar -->
+    <div id="cartSidebar" class="side-panel">
+        <div class="d-flex justify-content-between align-items-center mb-5">
+            <h3 class="fw-bold mb-0" data-t="cart_title">Your Cart</h3>
+            <button class="btn-close" onclick="closePanels()"></button>
+        </div>
+        
+        <div id="cartItems" class="flex-grow-1 overflow-auto mb-4"></div>
+        
+        <div class="p-3 bg-light rounded-3 mb-4">
+            <label class="extra-small fw-bold text-muted mb-2 d-block" data-t="promo_label">PROMO CODE</label>
+            <div class="d-flex">
+                <input type="text" id="promoInput" class="form-control form-control-sm" placeholder="PORTFOLIO20">
+                <button class="btn btn-dark btn-sm rounded-0 rounded-end" onclick="applyPromo()" data-t="promo_btn">Apply</button>
+            </div>
+            <div id="promoMsg" class="extra-small mt-2" style="display:none"></div>
+        </div>
+
+        <div class="border-top pt-4">
+            <div class="d-flex justify-content-between mb-1">
+                <span class="text-muted small" data-t="subtotal_label">Subtotal</span>
+                <span id="cartSubtotal" class="small">$0.00</span>
+            </div>
+            <div id="discountRow" class="d-flex justify-content-between text-success mb-1" style="display:none">
+                <span class="small" data-t="discount_label">Discount</span>
+                <span id="discountVal" class="small">-$0.00</span>
+            </div>
+            <div class="d-flex justify-content-between fw-bold fs-4 mt-2">
+                <span>Total</span>
+                <span id="cartTotal">$0.00</span>
+            </div>
+            <button class="btn btn-dark w-100 py-3 mt-4 rounded-pill fw-bold" onclick="alert('Demo payment...')" data-t="checkout_btn">CHECKOUT NOW</button>
+        </div>
+    </div>
+
+    <script>
+        // --- TRANSLATIONS DICTIONARY ---
+        const I18N = {
+            en: {
+                hero_title: "Modern Heritage.",
+                hero_desc: "Curated collection celebrating the fusion of traditional art and contemporary design.",
+                hero_cta: "EXPLORE COLLECTION",
+                catalog_title: "Catalog",
+                browsing_label: "Browsing",
+                cat_all: "All",
+                cat_acc: "Accessories",
+                cat_home: "Home",
+                cat_apparel: "Apparel",
+                recent_label: "RECENTLY VIEWED",
+                cart_title: "Your Cart",
+                promo_label: "PROMO CODE",
+                promo_btn: "Apply",
+                subtotal_label: "Subtotal",
+                discount_label: "Discount",
+                checkout_btn: "CHECKOUT NOW",
+                search_placeholder: "Search...",
+                added_toast: "added to cart",
+                cart_empty: "Your cart is currently empty.",
+                no_products: "No products found.",
+                promo_success: "20% Discount Applied!",
+                promo_fail: "Invalid code."
+            },
+            my: {
+                hero_title: "Warisan Moden.",
+                hero_desc: "Koleksi pilihan yang meraikan gabungan seni tradisi dan rekaan kontemporari.",
+                hero_cta: "TEROKAI KOLEKSI",
+                catalog_title: "Katalog",
+                browsing_label: "Paparan",
+                cat_all: "Semua",
+                cat_acc: "Aksesori",
+                cat_home: "Kediaman",
+                cat_apparel: "Pakaian",
+                recent_label: "TADI ANDA LIHAT",
+                cart_title: "Troli Anda",
+                promo_label: "KOD PROMO",
+                promo_btn: "Guna",
+                subtotal_label: "Jumlah Kecil",
+                discount_label: "Diskaun",
+                checkout_btn: "BAYAR SEKARANG",
+                search_placeholder: "Cari barang...",
+                added_toast: "ditambah ke troli",
+                cart_empty: "Troli anda masih kosong.",
+                no_products: "Tiada produk ditemui.",
+                promo_success: "Diskaun 20% Berjaya!",
+                promo_fail: "Kod tidak sah."
+            }
+        };
+
+        const PRODUCTS = [
+            { id: 1, name: "Vintage Leather Satchel", price: 120, category: "Accessories", desc: {en: "Handmade genuine leather bag with premium stitching.", my: "Beg kulit asli buatan tangan dengan kualiti jahitan premium."}, img: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&q=80&w=400" },
+            { id: 2, name: "Minimalist Ceramic Vase", price: 45, category: "Home", desc: {en: "Matte white ceramic vase perfect for minimalist decor.", my: "Pasu seramik putih matte yang sesuai untuk hiasan meja minimalis."}, img: "https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&q=80&w=400" },
+            { id: 3, name: "Linen Summer Shirt", price: 65, category: "Apparel", desc: {en: "Breathable linen fabric shirt for tropical weather.", my: "Kemeja fabrik linen yang sejuk dan selesa untuk cuaca tropika."}, img: "https://images.unsplash.com/photo-1596755094514-f87034a70b2c?auto=format&fit=crop&q=80&w=400" },
+            { id: 4, name: "Brass Desk Lamp", price: 85, category: "Home", desc: {en: "Brass desk lamp with a modern industrial touch.", my: "Lampu meja tembaga dengan sentuhan industrial moden."}, img: "https://images.unsplash.com/photo-1534073828943-f801091bb18c?auto=format&fit=crop&q=80&w=400" },
+            { id: 5, name: "Wool Felt Fedora", price: 75, category: "Accessories", desc: {en: "Wool felt fedora for an elegant style.", my: "Topi fedora bulu biri-biri untuk gaya yang elegan."}, img: "https://images.unsplash.com/photo-1514327605112-b887c0e61c0a?auto=format&fit=crop&q=80&w=400" },
+            { id: 6, name: "Indigo Denim Jacket", price: 110, category: "Apparel", desc: {en: "Durable indigo denim jacket, a timeless classic.", my: "Jaket denim indigo yang tahan lasak dan bergaya."}, img: "https://images.unsplash.com/photo-1576905341939-402d5d37e8c3?auto=format&fit=crop&q=80&w=400" }
+        ];
+
+        let lang = localStorage.getItem('lgb_lang') || 'en';
+        let cart = JSON.parse(localStorage.getItem('lgb_cart')) || [];
+        let history = JSON.parse(localStorage.getItem('lgb_history')) || [];
+        let currentCategory = 'All';
+        let discountRate = 0;
+
+        function setLanguage(l) {
+            lang = l;
+            localStorage.setItem('lgb_lang', l);
+            updateTranslations();
+            renderProducts(0);
+            updateCartUI();
+            renderHistory();
+        }
+
+        function updateTranslations() {
+            document.querySelectorAll('[data-t]').forEach(el => {
+                const key = el.getAttribute('data-t');
+                if(el.tagName === 'INPUT') el.placeholder = I18N[lang][key];
+                else el.innerText = I18N[lang][key];
+            });
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`lang-${lang}`).classList.add('active');
+            document.getElementById('categoryLabel').innerText = currentCategory === 'All' ? I18N[lang].cat_all : currentCategory;
+        }
+
+        function renderProducts(delay = 400, data = PRODUCTS) {
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = Array(3).fill('<div class="col-md-4 mb-4"><div class="skeleton-card"></div></div>').join('');
+
+            setTimeout(() => {
+                const filtered = currentCategory === 'All' ? data : data.filter(p => p.category === currentCategory);
+                if (filtered.length === 0) {
+                    grid.innerHTML = `<div class="col-12 text-center py-5"><p class="text-muted">${I18N[lang].no_products}</p></div>`;
+                    return;
+                }
+                grid.innerHTML = filtered.map(p => `
+                    <div class="col-md-4 product-item reveal">
+                        <div class="product-card">
+                            <div class="product-img-container">
+                                <img src="${p.img}" alt="${p.name}">
+                                <button class="btn-add-cart" onclick="addToCart(${p.id})">
+                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+                                </button>
+                            </div>
+                            <div class="mt-3">
+                                <h6 class="mb-0 fw-bold">${p.name}</h6>
+                                <p class="text-muted extra-small mb-0">$${p.price} — ${p.category}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+                checkReveal();
+            }, delay);
+        }
+
+        function filterSearch() {
+            const term = document.getElementById('searchInput').value.toLowerCase();
+            const results = PRODUCTS.filter(p => p.name.toLowerCase().includes(term));
+            renderProducts(100, results);
+        }
+
+        function addToCart(id) {
+            const p = PRODUCTS.find(p => p.id === id);
+            const item = cart.find(i => i.id === id);
+            if(item) item.quantity++; else cart.push({...p, quantity: 1});
+            saveCart(); updateCartUI();
+            showToast(`${p.name} ${I18N[lang].added_toast}.`);
+            addToHistory(id);
+        }
+
+        function addToHistory(id) {
+            const p = PRODUCTS.find(p => p.id === id);
+            history = history.filter(h => h.id !== id);
+            history.unshift(p);
+            if(history.length > 4) history.pop();
+            localStorage.setItem('lgb_history', JSON.stringify(history));
+            renderHistory();
+        }
+
+        function renderHistory() {
+            const container = document.getElementById('historyItems');
+            const bar = document.getElementById('recentlyViewed');
+            if(history.length === 0) return bar.style.display = 'none';
+            bar.style.display = 'block';
+            container.innerHTML = history.map(h => `<img src="${h.img}" style="width:50px; height:50px; border-radius:8px; object-fit:cover; border:1px solid #eee;">`).join('');
+        }
+
+        function updateCartUI() {
+            const container = document.getElementById('cartItems');
+            const subtotal = cart.reduce((s, i) => s + (i.price * i.quantity), 0);
+            const discount = subtotal * discountRate;
+            const total = subtotal - discount;
+
+            document.getElementById('cartCount').innerText = cart.reduce((s, i) => s + i.quantity, 0);
+            document.getElementById('cartSubtotal').innerText = `$${subtotal.toFixed(2)}`;
+            document.getElementById('cartTotal').innerText = `$${total.toFixed(2)}`;
+            
+            const discRow = document.getElementById('discountRow');
+            if(discount > 0) {
+                discRow.style.display = 'flex';
+                document.getElementById('discountVal').innerText = `-$${discount.toFixed(2)}`;
+            } else { discRow.style.display = 'none'; }
+
+            if(cart.length === 0) {
+                container.innerHTML = `<p class="text-center text-muted mt-5 py-5 small">${I18N[lang].cart_empty}</p>`;
+            } else {
+                container.innerHTML = cart.map(item => `
+                    <div class="d-flex gap-3 mb-4 align-items-center">
+                        <img src="${item.img}" style="width:60px; height:75px; object-fit:cover; border-radius:10px;">
+                        <div class="flex-grow-1">
+                            <div class="fw-bold small">${item.name}</div>
+                            <div class="text-muted extra-small mb-2">$${item.price}</div>
+                            <div class="d-flex align-items-center gap-2">
+                                <button class="btn btn-sm btn-light border p-0 px-2" onclick="updateQty(${item.id}, -1)">-</button>
+                                <span class="small">${item.quantity}</span>
+                                <button class="btn btn-sm btn-light border p-0 px-2" onclick="updateQty(${item.id}, 1)">+</button>
+                            </div>
+                        </div>
+                        <button class="btn btn-link text-dark text-decoration-none p-0 fs-4" onclick="removeFromCart(${item.id})">&times;</button>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function applyPromo() {
+            const code = document.getElementById('promoInput').value.trim().toUpperCase();
+            const msg = document.getElementById('promoMsg');
+            if(code === 'PORTFOLIO20') {
+                discountRate = 0.2;
+                msg.innerText = I18N[lang].promo_success;
+                msg.className = "extra-small mt-2 text-success fw-bold";
+            } else {
+                discountRate = 0;
+                msg.innerText = I18N[lang].promo_fail;
+                msg.className = "extra-small mt-2 text-danger";
+            }
+            msg.style.display = 'block';
+            updateCartUI();
+        }
+
+        function showToast(msg) {
+            const container = document.getElementById('toastContainer');
+            const t = document.createElement('div');
+            t.className = 'custom-toast';
+            t.innerHTML = `<svg width="18" height="18" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg> ${msg}`;
+            container.appendChild(t);
+            setTimeout(() => t.remove(), 3000);
+        }
+
+        function filterCategory(cat, btn) {
+            currentCategory = cat;
+            document.getElementById('categoryLabel').innerText = cat === 'All' ? I18N[lang].cat_all : cat;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderProducts();
+        }
+
+        function updateQty(id, delta) {
+            const item = cart.find(i => i.id === id);
+            if(item) {
+                item.quantity += delta;
+                if(item.quantity <= 0) cart = cart.filter(i => i.id !== id);
+                saveCart(); updateCartUI();
+            }
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(i => i.id !== id);
+            saveCart(); updateCartUI();
+        }
+
+        function saveCart() { localStorage.setItem('lgb_cart', JSON.stringify(cart)); }
+        function togglePanel(panelId) { closePanels(); document.getElementById(panelId).classList.add('active'); document.getElementById('globalOverlay').style.display = 'block'; }
+        function closePanels() { document.querySelectorAll('.side-panel').forEach(p => p.classList.remove('active')); document.getElementById('globalOverlay').style.display = 'none'; }
+        function closeRecentlyViewed() { document.getElementById('recentlyViewed').style.display = 'none'; }
+        function checkReveal() { document.querySelectorAll('.reveal').forEach(el => { if (el.getBoundingClientRect().top < window.innerHeight - 50) el.classList.add('active'); }); }
+
+        window.addEventListener('scroll', checkReveal);
+        window.onload = () => { setLanguage(lang); };
+    </script>
+</body>
+</html>
