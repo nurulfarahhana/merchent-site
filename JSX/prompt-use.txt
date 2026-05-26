@@ -1,0 +1,338 @@
+
+---
+
+# FULL GEMINI CANVAS MODE PROMPT (MASTER PROMPT)
+
+```txt
+You are a senior frontend software architect and UI engineer.
+
+Your task is to rebuild and upscale my existing e-commerce showcase website into a production-level modern web application.
+
+IMPORTANT:
+This is NOT a beginner tutorial project.
+The goal is to transform it from junior-level architecture into mid-level / professional frontend architecture.
+
+==================================================
+PROJECT OVERVIEW
+==================================================
+
+Project Name:
+Laghobuying — Modern Heritage
+
+Theme:
+Luxury modern heritage aesthetic combining minimalist contemporary design with traditional artistic inspiration.
+
+The website should feel:
+- premium
+- elegant
+- modern
+- smooth
+- interactive
+- responsive
+- scalable
+
+Design inspiration:
+- Aesop
+- Zara Home
+- Apple
+- COS
+- Muji
+- Gentle Monster
+
+==================================================
+CURRENT FEATURES
+==================================================
+
+The current project already includes:
+- Product catalog
+- Search functionality
+- Category filtering
+- Shopping cart
+- LocalStorage persistence
+- Promo code system
+- Language switching (EN/BM)
+- Recently viewed products
+- Toast notifications
+- Skeleton loading
+- Reveal animations
+
+==================================================
+GOAL
+==================================================
+
+Rebuild the entire project using modern scalable frontend architecture.
+
+The final result must feel like:
+- production-ready
+- maintainable
+- component-driven
+- scalable
+- cleanly structured
+- modern frontend engineering standard
+
+==================================================
+TECH STACK REQUIREMENTS
+==================================================
+
+Frontend:
+- React
+- Vite
+- TypeScript
+- Tailwind CSS
+
+State Management:
+- Zustand preferred
+OR
+- Redux Toolkit
+
+Routing:
+- React Router
+
+Animation:
+- Framer Motion
+
+Icons:
+- Lucide React
+
+API:
+- Mock API initially
+- architecture ready for real backend integration
+
+Testing-ready architecture:
+- clean folder structure
+- reusable services
+- reusable hooks
+
+==================================================
+ARCHITECTURE REQUIREMENTS
+==================================================
+
+Create proper scalable architecture:
+
+src/
+  assets/
+  components/
+  layouts/
+  pages/
+  routes/
+  hooks/
+  store/
+  services/
+  api/
+  utils/
+  constants/
+  types/
+  i18n/
+  animations/
+
+==================================================
+REQUIREMENTS
+==================================================
+
+1. COMPONENT-BASED ARCHITECTURE
+
+Split everything into reusable components:
+- Navbar
+- HeroSection
+- ProductGrid
+- ProductCard
+- SearchBar
+- FilterTabs
+- CartSidebar
+- CartItem
+- Toast
+- PromoCodeInput
+- RecentlyViewed
+- Footer
+- MobileMenu
+- LoadingSkeleton
+
+Components must be reusable and clean.
+
+==================================================
+2. TYPESCRIPT
+==================================================
+
+Use proper TypeScript interfaces/types for:
+- Product
+- CartItem
+- User
+- Language
+- Category
+- PromoCode
+
+Avoid any usage.
+
+==================================================
+3. STATE MANAGEMENT
+==================================================
+
+Use global state for:
+- cart
+- language
+- theme
+- recently viewed products
+
+Persist important data using localStorage middleware.
+
+==================================================
+4. RESPONSIVE DESIGN
+==================================================
+
+Fully responsive:
+- mobile-first
+- tablet optimized
+- desktop polished
+
+Include:
+- mobile sidebar
+- sticky bottom actions
+- responsive grids
+- smooth touch interactions
+
+==================================================
+5. UI/UX QUALITY
+==================================================
+
+The site should feel:
+- premium
+- cinematic
+- elegant
+
+Add:
+- smooth transitions
+- hover interactions
+- subtle animations
+- page transitions
+- loading states
+- image lazy loading
+
+Use Framer Motion elegantly.
+
+==================================================
+6. ACCESSIBILITY
+==================================================
+
+Include:
+- semantic HTML
+- aria-labels
+- keyboard navigation
+- focus states
+
+==================================================
+7. PERFORMANCE
+==================================================
+
+Implement:
+- lazy loading
+- code splitting
+- debounced search
+- optimized rendering
+- reusable hooks
+
+==================================================
+8. INTERNATIONALIZATION
+==================================================
+
+Implement proper i18n architecture:
+- translation JSON files
+- EN and BM support
+- scalable for future languages
+
+==================================================
+9. MOCK BACKEND STRUCTURE
+==================================================
+
+Simulate backend-ready architecture:
+- services/api
+- async fetching
+- loading states
+- error handling
+
+Products should be fetched asynchronously.
+
+==================================================
+10. FUTURE-READY FEATURES
+==================================================
+
+Prepare architecture for:
+- authentication
+- wishlist
+- checkout system
+- payment gateway
+- CMS
+- admin dashboard
+- order history
+
+==================================================
+11. CLEAN CODE REQUIREMENTS
+==================================================
+
+Code must be:
+- maintainable
+- readable
+- scalable
+- modular
+- reusable
+
+Avoid giant files.
+
+==================================================
+12. DELIVERABLES
+==================================================
+
+Generate:
+- full project structure
+- React components
+- Zustand store
+- TypeScript types
+- Tailwind styling
+- routing setup
+- mock data/services
+- reusable hooks
+- animations
+- utility helpers
+
+==================================================
+13. DESIGN SYSTEM
+==================================================
+
+Create consistent design tokens:
+- typography
+- spacing
+- border radius
+- shadows
+- colors
+
+Theme:
+- warm luxury neutrals
+- soft whites
+- muted gold accents
+- elegant black
+
+==================================================
+14. EXTRA MID-LEVEL ENGINEERING IMPROVEMENTS
+==================================================
+
+Add:
+- custom hooks
+- reusable utility functions
+- proper folder separation
+- centralized constants
+- API abstraction layer
+- error boundaries
+- empty states
+- fallback UI
+
+==================================================
+15. IMPORTANT
+==================================================
+
+Do NOT create a beginner-style React app.
+
+The codebase should resemble:
+- real startup frontend architecture
+- scalable SaaS/e-commerce frontend
+- mid-level frontend engineering practices
+
+The project must feel portfolio-worthy and production-inspired.
