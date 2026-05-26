@@ -1,0 +1,50 @@
+Cara 1: Test Online (Paling Cepat & Senang, Tak Perlu Install Apa-apa)
+Cara ini paling mudah kalau anda sekadar nak tengok paparan dia hidup secara live:
+
+Pergi ke laman web StackBlitz atau CodeSandbox.
+
+Mulakan projek baru dan pilih template React (pastikan ia menyokong Tailwind CSS).
+
+Salin (copy) semua kod dari file App.jsx yang kita jana tadi, kemudian tampal (paste) ke dalam fail App.jsx di dalam editor online tersebut. Fail itu akan terus dikompilasi secara automatik di sebelah kanan skrin!
+
+Cara 2: Setup di Komputer Sendiri (Lokal)
+Jika anda mahu memasangnya secara rasmi di komputer (pastikan anda sudah memasang Node.js):
+
+Bina projek React baru menggunakan Vite:
+Buka terminal atau Command Prompt (CMD), lalu jalankan arahan ini:
+
+Bash
+npm create vite@latest laghobuying -- --template react
+cd laghobuying
+Pasang pakej asas:
+
+Bash
+npm install
+Pasang Tailwind CSS (kerana reka bentuk premium kita menggunakan kelas Tailwind):
+
+Bash
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
+Konfigurasi Tailwind:
+Buka fail tailwind.config.js di dalam projek anda, dan gantikan bahagian content menjadi seperti ini:
+
+JavaScript
+content: [
+  "./index.html",
+  "./src/**/*.{js,ts,jsx,tsx}",
+],
+Masukkan Direktif Tailwind:
+Buka fail src/index.css, padam semua kod asal di dalamnya, dan gantikan dengan tiga baris ini:
+
+CSS
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+Ganti Fail App:
+Buka fail src/App.jsx, padam semua kod sedia ada, kemudian tampal (paste) keseluruhan kod premium App.jsx yang kita buat tadi.
+
+Jalankan Aplikasi:
+
+Bash
+npm run dev
+Terminal akan memberikan satu alamat url lokal (biasanya http://localhost:5173). Buka alamat tersebut di pelayar (browser) anda dan saksikan laman e-dagang premium anda berfungsi sepenuhnya! Selamat mencuba!
